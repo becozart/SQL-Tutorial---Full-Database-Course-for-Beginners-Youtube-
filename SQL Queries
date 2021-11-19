@@ -1,0 +1,165 @@
+/*
+Creating Tables
+*/
+-----------------------------------------------------------------------------------------------
+
+-- Creates a new table with the given columns
+-- First give the name of the column
+-- Then give its data type
+-- Lastly, set the primary key of the table
+CREATE TABLE student (
+    student_id INT,
+    name VARCHAR(20),
+    major VARCHAR(20), 
+    PRIMARY KEY(student_id)
+);
+
+-- Provides a description of the table
+DESCRIBE student;
+
+-- Deletes the table
+DROP TABLE student;
+
+-- Adds a column with the given data type to the table
+ALTER TABLE student ADD gpa DECIMAL(3, 2);
+
+-- Deletes the given column from the table
+ALTER TABLE student DROP COLUMN gpa;
+
+-----------------------------------------------------------------------------------------------
+/*
+Inserting Data
+*/
+-----------------------------------------------------------------------------------------------
+
+-- Inserts a new row with the given values 
+-- (in the order that they were defined in the table)
+INSERT INTO student VALUES(1, 'Jack', 'Biology'); 
+
+-- Gets all rows from the given table
+SELECT * FROM student;
+
+-- Inserts a new row with the given values for the specified columns
+-- The columns that are not included will be given the value NULL for this row
+INSERT INTO student(student_id, name) VALUES(3, 'Claire');
+
+-- Note: if you try to enter an new row with a key that already exists in the table
+-- you will get an error similar to the following: 
+-- "Duplicate entry '3' for key 'PRIMARY'"
+
+DROP TABLE student;
+
+-----------------------------------------------------------------------------------------------
+/*
+Constraints
+*/
+-----------------------------------------------------------------------------------------------
+
+-- NOT NULL - makes it so that a row cannot contain null in this column
+-- UNIQUE - makes it so that each row has to have a unique value for this column
+CREATE TABLE student (
+    student_id INT,
+    name VARCHAR(20) NOT NULL,
+    major VARCHAR(20) UNIQUE, 
+    PRIMARY KEY(student_id)
+);
+
+INSERT INTO student VALUES(1, 'Jack', 'Biology');
+INSERT INTO student VALUES(2, 'Kate', 'Sociology');
+
+-- This line will throw an error because we said the name could not be null
+INSERT INTO student VALUES(3, NULL, 'Chemistry'); 
+
+-- This line will throw an error because we said that each row's class has to be unique
+INSERT INTO student VALUES(1, 'Jack', 'Biology');
+
+SELECT * FROM student;
+
+-- Note: a primary key is basically a column that is both NOT NULL and UNIQUE
+
+DROP TABLE student;
+
+-- We can also give a column a default value using the keyword DEFAULT
+CREATE TABLE student (
+    student_id INT,
+    name VARCHAR(20),
+    major VARCHAR(20) DEFAULT 'Undecided', 
+    PRIMARY KEY(student_id)
+);
+
+INSERT INTO student(student_id, name) VALUES(1, 'Jack');
+
+SELECT * FROM student;
+
+DROP TABLE student;
+
+-- We can also have define a column so that its value automatically increment 
+-- when it goes to the next row using AUTO_INCREMENT
+CREATE TABLE student (
+    student_id INT AUTO_INCREMENT,
+    name VARCHAR(20),
+    major VARCHAR(20), 
+    PRIMARY KEY(student_id)
+);
+
+-- Note: since the student ID is auto incremented, we can leave it out when inserting a new row
+INSERT INTO student(name, major) VALUES('Jack', 'History');
+INSERT INTO student(name, major) VALUES('Jill', 'Math');
+INSERT INTO student(name, major) VALUES('Austen', 'Physics');
+INSERT INTO student(name, major) VALUES('Yuan Chi', 'PPE');
+
+SELECT * FROM student;
+
+DROP TABLE student;
+
+-----------------------------------------------------------------------------------------------
+/* 
+Updating and Deleting Rows
+*/
+-----------------------------------------------------------------------------------------------
+
+CREATE TABLE student (
+    student_id INT AUTO_INCREMENT,
+    name VARCHAR(20),
+    major VARCHAR(20), 
+    PRIMARY KEY(student_id)
+);
+
+INSERT INTO student(name, major) VALUES('Jack', 'Biology');
+INSERT INTO student(name, major) VALUES('Jill', 'Math');
+INSERT INTO student(name, major) VALUES('Austen', 'Physics');
+INSERT INTO student(name, major) VALUES('Yuan Chi', 'PPE');
+
+SELECT * FROM student;
+
+-- You can use the keyword UPDATE to update the row values for specific columns
+-- SET tells you which column to update
+-- WHERE designates a condition for the row / column to fit for it to be updated
+UPDATE student
+SET major = 'Bio'
+WHERE major = 'Biology';
+
+SELECT * FROM student;
+
+-- You can make the conditions for a row to be updated more complex using boolean logic
+UPDATE student
+SET major = 'Biochemistry'
+WHERE major = 'Biology' OR major = 'Chemistry';
+
+SELECT * FROM student;
+
+-- You can also update multiple columns at once in the selected rows
+UPDATE student
+SET major = 'Undecided', name = 'Unknown'
+WHERE student_id < 6;
+
+SELECT * FROM student;
+
+-- You can delete all rows from a table using the DELETE keyword with no arguments
+DELETE FROM student;
+
+-- You can delete all rows from a table using the DELETE keyword with no arguments
+DELETE FROM student
+WHERE student_id = 4;
+
+SELECT * FROM student;
